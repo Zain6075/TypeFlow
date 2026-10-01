@@ -143,9 +143,10 @@ class HomePage(QWidget):
 
         next_level = engine.next_level(profile)
         spec = engine.spec(next_level)
-        if next_level > config.TOTAL_LEVELS:
+        if engine.highest_completed(profile) >= config.TOTAL_LEVELS:
             self.continue_title.setText("Campaign complete!")
-            self.continue_subtitle.setText("You have finished all 100 levels. Replay any level for more stars.")
+            self.continue_subtitle.setText(
+                "You have finished all 100 levels. Replay any level to collect the missing stars.")
         elif spec.get("is_test"):
             self.continue_title.setText(f"Final test {next_level}")
             self.continue_subtitle.setText(f"{spec['title']} - everything you have learned, mixed together.")

@@ -154,7 +154,7 @@ class MainWindow(QMainWindow):
         self.home_page.switch_profile_requested.connect(self.switch_profile)
         self.home_page.manage_profiles_requested.connect(lambda: self.navigate("profiles"))
         self.levels_page.open_level_requested.connect(self.open_level)
-        self.typing_page.abandon_requested.connect(lambda: self.navigate("levels"))
+        self.typing_page.abandon_requested.connect(self._abandon_level)
         self.results_page.retry_requested.connect(lambda: self.open_level(self._last_level))
         self.results_page.next_requested.connect(self._open_next_level)
         self.results_page.home_requested.connect(lambda: self.navigate("home"))
@@ -276,6 +276,11 @@ class MainWindow(QMainWindow):
         self.stack.setCurrentWidget(self.typing_page)
         self.statusBar().showMessage(f"Level {level}  -  {self.engine.spec(level)['title']}")
         self.typing_page.setFocus()
+
+    def _abandon_level(self) -> None:
+        """Leave a lesson without saving it."""
+        self.typing_page.stop()
+        self.navigate("levels")
 
     def _open_next_level(self) -> None:
         """Continue with the level after the one that was just finished."""

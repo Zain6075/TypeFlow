@@ -153,6 +153,7 @@ class TypingPage(QWidget):
         self.controller.sound.set_enabled(sound_on)
 
         self._refresh_live_stats()
+        self.timer.start()          # keeps the clock ticking between keystrokes
         self.setFocus()
 
     # -- input -------------------------------------------------------------------
@@ -225,6 +226,10 @@ class TypingPage(QWidget):
         self.progress.setValue(int(engine.progress() * 1000))
 
     # -- toggles ------------------------------------------------------------------
+    def stop(self) -> None:
+        """Stop the live-stats timer (called when leaving the screen)."""
+        self.timer.stop()
+
     def _toggle_keyboard(self) -> None:
         self.show_keyboard = self.keyboard_button.isChecked()
         self.keyboard.setVisible(self.show_keyboard)
