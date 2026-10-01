@@ -33,6 +33,3 @@ Thumbs.db
 # Inno Setup build output
 installer/Output/
 installer/*.tmp
-
-# Built Windows binaries (published as GitHub Release assets, not committed)
-release/
