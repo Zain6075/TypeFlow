@@ -18,6 +18,11 @@
 #define MyAppURL "https://github.com/Zain6075/TypeFlow"
 #define MyAppExeName "TypeFlow.exe"
 
+; Path of the PyInstaller output (override with /DTypeFlowExe=... if needed).
+#ifndef TypeFlowExe
+  #define TypeFlowExe "..\dist\TypeFlow.exe"
+#endif
+
 [Setup]
 ; A stable AppId keeps upgrades in place (do not change between releases).
 AppId={{7E9B2C4A-1F3D-4B8E-9A5C-TYPEFLOW0001}
@@ -57,7 +62,7 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 ; The single-file PyInstaller build - everything is inside this .exe.
-Source: "..\dist\TypeFlow.exe"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#TypeFlowExe}"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\assets\icon.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\README.md"; DestDir: "{app}"; Flags: ignoreversion isreadme
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion

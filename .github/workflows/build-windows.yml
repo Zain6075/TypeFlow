@@ -43,6 +43,7 @@ jobs:
           python -m pip install "pyinstaller>=6.0"
 
       # ---------------------------------------------------------------- portable
+      # Produces dist\TypeFlow.exe (the installer needs this exact file name).
       - name: Build portable .exe (PyInstaller)
         run: |
           pyinstaller --noconfirm --clean `
@@ -55,6 +56,25 @@ jobs:
             --hidden-import PyQt6.QtMultimedia `
             run.py
 
+      # ----------------------------------------------------------------- installer
+      # Must run before the portable build is renamed.
+      - name: Build installer (Inno Setup)
+        shell: pwsh
+        run: |
+          $version = "${{ inputs.version }}"
+          if (-not $version) { $version = "1.0.0" }
+          $iscc = Join-Path ${env:ProgramFiles(x86)} "Inno Setup 6\ISCC.exe"
+          if (-not (Test-Path $iscc)) {
+            Write-Host "::warning::Inno Setup not found - skipping the installer."
+            exit 0
+          }
+          & $iscc "installer\TypeFlow.iss" "/DMyAppVersion=$version"
+          if ($LASTEXITCODE -ne 0) {
+            Write-Host "::error::Inno Setup failed with exit code $LASTEXITCODE"
+            exit $LASTEXITCODE
+          }
+          Write-Host "Installer built: installer\Output\TypeFlowSetup-$version.exe"
+
       - name: Rename portable build
         shell: pwsh
         run: |
@@ -63,19 +83,11 @@ jobs:
           Rename-Item -Path dist\TypeFlow.exe -NewName "TypeFlow-$version-portable.exe"
           Write-Host "Built TypeFlow-$version-portable.exe"
 
-      # ----------------------------------------------------------------- installer
-      - name: Build installer (Inno Setup)
+      - name: List build output
         shell: pwsh
         run: |
-          $version = "${{ inputs.version }}"
-          if (-not $version) { $version = "1.0.0" }
-          $iscc = Join-Path ${env:ProgramFiles(x86)} "Inno Setup 6\ISCC.exe"
-          if (Test-Path $iscc) {
-            & $iscc "installer\TypeFlow.iss" "/DMyAppVersion=$version"
-            Write-Host "Installer built."
-          } else {
-            Write-Host "::warning::Inno Setup not found - skipping the installer."
-          }
+          Get-ChildItem -Recurse -Include *.exe dist, installer\Output |
+            ForEach-Object { "{0}  ({1:N1} MB)" -f $_.FullName, ($_.Length / 1MB) }
 
       # ------------------------------------------------------------------ artifacts
       - name: Upload portable .exe
