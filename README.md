@@ -10,6 +10,29 @@ API calls and no analytics**. Every byte of data lives on your own PC.
 
 ---
 
+## ⬇️ Download for Windows
+
+Pre-built Windows binaries are produced automatically by GitHub Actions
+(`.github/workflows/build-windows.yml`) and attached to every Release:
+
+| File | What it is |
+| --- | --- |
+| **`TypeFlowSetup-1.0.0.exe`** | **Installer** — double-click, per-user install to `%LOCALAPPDATA%\Programs\TypeFlow`, Start-menu + optional desktop shortcut, uninstallable from *Settings → Apps*. No administrator rights needed. |
+| **`TypeFlow-1.0.0-portable.exe`** | Single portable `.exe` — no install required, runs from anywhere (USB stick, Downloads folder). |
+
+👉 **[Download the latest release](https://github.com/Zain6075/TypeFlow/releases/latest)**
+
+Both files are also available as build artifacts from any *Actions → Build
+Windows .exe* run (kept for 90 days). To build them yourself, see
+[Building the Windows .exe](#building-the-windows-exe) below — or just run
+`build_exe.bat` for the portable build.
+
+> Requires Windows 10/11 (64-bit). The app is fully offline: it needs no
+> installer prerequisites, .NET, or admin rights beyond what the installer
+> itself uses.
+
+---
+
 ## Screenshots
 
 | Home & level map | Typing screen |
@@ -162,22 +185,38 @@ That's it — no configuration, no login, no network.
 
 ## Building the Windows .exe
 
+### Automatically (recommended)
+
+Every push of a `v*` tag — and every published Release — runs
+`.github/workflows/build-windows.yml` on a GitHub-hosted Windows runner, which
+builds **both** the portable `.exe` and the Inno Setup installer and attaches
+them to the Release:
+
 ```bat
-build_exe.bat
+git tag v1.0.0
+git push origin v1.0.0
 ```
 
-The script creates a virtual environment, installs the dependencies and runs
-PyInstaller to produce a single-file executable:
+You can also trigger a build by hand: *Actions → Build Windows .exe → Run
+workflow* (the resulting files appear as downloadable artifacts).
 
-```
-dist\TypeFlow.exe
+### Locally
+
+```bat
+build_exe.bat          REM portable single-file .exe -> dist\TypeFlow.exe
 ```
 
-Upload `dist\TypeFlow.exe` straight to a **GitHub Release**.  (Linux/macOS
-developers can run `./build_exe.sh` to get `dist/TypeFlow`.)
+`build_exe.bat` creates a virtual environment, installs the dependencies and
+runs PyInstaller. To also get the installer, run:
+
+```bat
+"C:\Program Files (x86)\Inno Setup 6\ISCC.exe" installer\TypeFlow.iss
+REM -> installer\Output\TypeFlowSetup-1.0.0.exe
+```
 
 The build bundles `lessons.json` and the icon, and explicitly imports
-`PyQt6.QtMultimedia` so the sound effects are included.
+`PyQt6.QtMultimedia` so the sound effects are included.  (Linux/macOS
+developers can run `./build_exe.sh` to get `dist/TypeFlow`.)
 
 ## Running the tests
 
