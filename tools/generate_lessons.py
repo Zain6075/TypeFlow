@@ -1,0 +1,1600 @@
+#!/usr/bin/env python3
+"""Regenerate ``typing_app/data/lessons.json`` from the content below.
+
+The JSON file that ships with the app is the *editable* source of truth - you
+can open it in any text editor and tweak words, sentences or paragraphs.  This
+script only exists so the initial content can be rebuilt/extended in one go:
+
+    python tools/generate_lessons.py
+
+Structure of lessons.json::
+
+    {
+      "rows":         {"home": "asdfghjkl;", ...},   # key sets for levels 1-10
+      "words":        {"easy": [...], "medium": [...], "hard": [...]},
+      "sentences":    {"easy": [...], "medium": [...], "hard": [...]},
+      "paragraphs":   {"medium": [...], "hard": [...]}
+    }
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+OUT = Path(__file__).resolve().parent.parent / "typing_app" / "data" / "lessons.json"
+
+# ---------------------------------------------------------------------------
+# Key sets used by the row lessons (levels 1-10)
+# ---------------------------------------------------------------------------
+ROWS = {
+    "home": "asdfghjkl;",
+    "top": "qwertyuiop",
+    "bottom": "zxcvbnm,./",
+    "numbers": "1234567890",
+    "punctuation": "!?.,;:'\"()-_$%&*",
+}
+
+# ---------------------------------------------------------------------------
+# Words
+# ---------------------------------------------------------------------------
+EASY_WORDS = """
+the and for are but not you all any can had her was one our out day get has him his how
+man new now old see two way who boy did its let put say she too use that with have this
+will your from they know want been good much some time very when come here just like
+long make many more only over such take than them well were what work year back call
+came each even find first give hand high keep kind last left life line look made most
+move must name need next night part place point read right same seem set show side
+small sound spell still tell thing think turn used very want way week well went wild
+word work year young about after again along among began being black blue bring brown
+buy carry clean close cold color could cover cross cut deep does done door draw drive
+drop early east easy eat eight else end enough even ever every eye face fact fair fall
+far farm feel feet fell field fig fill final fire fish five fix flat fly fold food foot
+form found four free fresh front full fun game garden gave girl glass gold gone grass
+great green grew ground grow happy head hear heat held hide hill hit hold hope hot hour
+huge hunt hurry ice idea inch inside job join jump kick king knee knew lady lake land
+large late laugh lay lead learn leave leg less let light list listen live local lonely
+loud love low lunch machine main map mark matter mean meet men mile milk mind miss
+money month moon morning mother mountain mouse mouth move movie music near neck never
+new news night nine north nose note nothing number ocean offer office often oil once
+open order outside page pain paint pair paper parent park part past path pay peace
+pen people person pick piece pink plan plant play please pocket police pool poor
+position possible post pound power practice present pretty print problem product
+program promise protect prove pull push question quick quiet quite race radio rain
+raise ran reach read ready real reason record red remember reply report rest result
+return rich ride right ring rise river road rock room round rule run sad safe sail
+salt sand sat save say scene school science score sea search season seat second see
+seem seen self sell send sense sent sentence separate set settle seven several shall
+shape share sharp she ship shoe shop short should shoulder shout shown side sight
+sign silence silver similar simple since sing single sink sit six size skill skin sky
+sleep slow small smart smell smile smoke snow soft soil soldier solution some son
+song soon sort sound south space speak special speed spell spend spoke sport spot
+spread spring square stand star start state station stay steady steam step stick
+still stone stood stop store storm story straight strange street strength stretch
+strong student study subject succeed success such sudden suffer sugar suggest summer
+sun supply support suppose sure surface surprise sweet swim system table tail take
+talk tall taste teach team teeth tell temperature ten term test than that theme then
+there these thick thin thing think third this those though thought three through
+throw tie time tiny to today together told tone tonight too took tool top total
+touch toward town track trade train transform travel tree triangle trip trouble
+true trust truth turn twenty two type under understand unit until up upon us use
+usual valley value various very victory view visit voice wait walk wall want war
+warm wash watch water wave way we weak wear weather week weight welcome well west
+wheel where whether which while white who whole why wide wife wild will win wind
+window winter wish with within without woman wonder wood word work world would
+write wrong yard year yellow yes yesterday yet young
+""".split()
+
+MEDIUM_WORDS = """
+ability abroad absence academy account accuracy accurate achieve acoustic acquire
+address adjust advance advantage adventure advertise advice afford against agency
+agenda agree ahead airport alarm algebra alien align allocate allow almost alone
+alphabet already although altogether always amazing ambition amount ancient anger
+angle animal answer anxious anybody anymore anyway apart apartment apologize
+apparent appeal appear apple application apply appoint approach approve argue
+around arrange arrival article artist aspect assault assemble assert assess asset
+assign assist assume athlete attach attack attempt attend attention author
+automatic available average avoid awake award aware balance balloon banquet
+bargain basic battery beautiful became because become before behavior behind
+believe belong beneath benefit beside better between beyond birthday bishop
+bitter blanket blossom border borrow bother bottle bottom boundary bracket
+branch brave break breakfast breeze bridge bright brilliant broaden brother
+budget building bullet bunch burden burial burning business butter button
+cabbage cabin cable calculate camera campaign cancel cancer candidate canyon
+capital captain capture careful carpet carrot castle casual catalog category
+caught ceiling celebrate cellar center central century ceremony certain chain
+chair chalk challenge chamber champion change channel chapter character charge
+charity chart chase cheap check cheese chemical chicken childhood choice choose
+circle circuit citizen classic clever climate climb clinic clock closet cloud
+cluster coastal coffee collect college colony combine comedy comfort command
+comment commerce common company compare compete complain complete complex
+concern concert conduct confirm conflict confuse congress connect consist
+constant contain content contest context continue contract contrast convene
+conversation convince cookie corner corporate correct cottage council counsel
+counter country county couple courage cousin cover cowboy crack crash create
+creature credit creek crescent criminal crisis criteria critic crop crowd
+crown cruel crystal cultural culture curious current curtain custom customer
+cycle daily damage dance danger darkness database daughter dawn deadline
+debate decade decide decision declare decline decorate decrease dedicate
+defeat defend deficit define degree delay delicate deliver demand democracy
+density deny depart depend deposit depth desert design desire desktop despite
+destination destroy detail detect determine develop device devote diagram
+dialogue diamond diary dictionary differ digest digital dilemma dimension
+dinner diploma direct dirt disagree disappear disaster discount discover
+discuss disease dismiss display dispute distance distinct district divide
+divorce document domain domestic dominate donkey double doubt downtown dozen
+draft drama dramatic dream dress drift drink drive drought drown during dusk
+duty eager earn earnest earth easily eastern economy edge edition editor
+educate effect effort either elastic elbow elder election electric elegant
+element elevator elite elsewhere embark embrace emerge emergency emission
+emotion empire employ empty enable enact endless endorse enemy energy enforce
+engage engine enhance enjoy enough ensure enter entire entrance envelope
+environment equal equation equip erosion error escape essay estate estimate
+ethics evening event eventual evidence evolve exact examine example excellent
+except exchange excite exclude excuse execute exercise exhibit exist exit
+expand expect expense expert expire explain explode explore export expose
+express extend extra fabric facility factor factory faculty failure fairly
+faith false familiar family famous fancy fantasy farmer fashion fatigue
+fault favor feature federal fellow female festival fiction fierce figure
+filter final finance finding finger finish fiscal fisher fitting fix flame
+flavor flesh float flood floor flour flower fluid flying focus follow
+forbid force forecast foreign forest forever forget forgive formal former
+fortune forward foster foundation fountain fraction fragment frame franchise
+frequent fresh friend fright front frozen fruit fuel function fundamental
+funny furniture further future gadget galaxy gallery garage garbage garden
+garlic gateway gather general generate generous genetic genius gentle genuine
+gesture ghost giant gift ginger giraffe given glance global glorious glove
+govern grace grade gradual graduate grand granite graphic grasp gravity
+great greed green grocery ground group grow guarantee guard guess guest
+guide guitar habit habitat hammer handle happen harbor hardly harmony
+harvest hazard health healthy heaven heavy hedge height helmet helpful
+herald heritage heroic hidden hierarchy highlight highway hillside hint
+hire history hobby hockey holiday hollow honest honey honor horizon
+horror hospital hotel household housing however human humble hunger hunter
+hurricane husband hybrid hydrogen hygiene hypothesis icon ideal identify
+idle ignore illegal illness illustrate image imagine immediate immense
+immigrant immune impact implement imply import impose impress improve
+impulse incident include increase incredible indeed independent index
+indicate indoor industry infant infect infer infinite influence inform
+infrared infrastructure inherit initial initiative inject injury inmate
+inner innocent innovate input inquiry insect insert inside insight
+insist inspect inspire install instance instead institute instruct
+instrument insult insurance intact intake integral intend intense interact
+intercept interest interfere interior internal internet interpret
+interrupt interval intervene interview intimate introduce invade invent
+invest investigate invisible invite involve iron island isolate issue
+item jacket jail jealous jersey jewel joint journal journey joy judge
+juice jumbo junction jungle junior justice justify keen kettle keyboard
+kidnap kidney kilometer kingdom kitchen kitten knight knock knowledge
+label labor ladder lagoon landscape language lantern laptop largely
+laser lasting lateral latter launch laundry lawsuit layout leader
+league leak lean leap learn lease least leather lecture legal legend
+legislation legitimate lemon length lens lesson letter level liberal
+liberty library license lifetime likely limit linear liquid listen
+literary literature litter little lively load loan lobby local locate
+lodge logic lonely loyal lucky luggage lumber lunar luxury machine
+madam magazine magic magnet mail main maintain major majority makeup
+malaria male mammal manage mandate manner mansion manual manufacture
+manuscript marble margin marine market marriage marsh martial marvel
+mask massive master matrix matter mature maximum maybe mayor meadow
+meaning measure mechanic medal media medical medium meeting melody
+member memoir memory mental mention mercy merely merge merit merry
+message metal method middle midnight might mild military million
+mineral minimal minister minor minute miracle mirror mission mistake
+mixture mobile modal model moderate modern modest modify module
+moisture moment monarchy monitor monkey monthly monster monument
+mood moral moreover mortgage mosaic motion motive motor mount
+mountain mouse mouth movement movie multiple muscle museum music
+mutual mystery myth naked napkin narrow nasty nation native natural
+nature naval navigate nearby nearly neat necessary necklace needle
+negative neglect neighbor neither nephew nerve nest network neutral
+newly newspaper nice nickel niece night noble nobody noise nominate
+nonsense normal northern notable nothing notice notion novel
+nowhere nuclear nudge number numerous nursery nurture nylon
+oasis obedience object obligation observe obstacle obtain obvious
+occasion occur ocean october offense offensive official offset
+often oil olive onboard opening opera operate opinion opponent
+opportunity oppose opposite optic optimal option orange orbit
+orchard orchestra ordinary organ organic organize origin original
+ornament orphan other otherwise ought outcome outdoor outer outfit
+outline output outrage outside outstanding oval overall overcome
+overlook oversee overt overtake overwhelm own oxygen oyster pace
+package packet paddle palace pale palm panel panic paper parade
+paragraph parallel parcel parent park parliament parlor parrot
+parsley part partial participate particle particular partner party
+passage passenger passion passive passport pasta patent path
+patient patrol pattern pause pavement payment peace peach peak
+peanut pearl peasant pedal penalty pencil pending pension people
+pepper perceive percent perfect perform perhaps period permanent
+permit persist person perspective persuade pertain pest petition
+petrol phantom phase phenomenon philosophy phone photo phrase
+physical piano picture piece pier pigeon pile pilot pioneer pipeline
+pirate pistol pitch pizza placid plague plain plane planet plaque
+plasma plastic plateau platform platinum plausible player pleasant
+please pleasure pledge plenty plot plug plunge plural pocket poem
+poet point poison polar police policy polish polite political
+pollution pond pony pool popular portion portrait portray position
+positive possess possible postcard poster postpone potato potential
+pottery poultry pound poverty powder power practical prairie praise
+prayer preach precise predict prefer pregnant prejudice preliminary
+premier premise premium prepare prescribe presence preserve preside
+press pressure prestige pretend pretty prevail prevent previous prey
+price pride priest primary prime prince principal principle print
+prior priority prison private privilege prize probable problem
+procedure proceed process proclaim produce product profession
+professor profile profit profound program progress prohibit
+project prolific promise promote prompt proof proper property
+proportion proposal prospect prosper protect protein protest
+protocol proud prove provide province provision provoke proximity
+psychology public publish pudding pulley pulse pumpkin punctual
+punish pupil puppet purchase pure purple purpose pursue puzzle
+pyramid qualify quality quantity quarrel quarter queen query
+quest question queue quick quiet quilt quirk quit quite quota
+quotation rabbit race radar radiant radio radish raft rail
+rainbow raise rally random range rapid rare rather ratio rational
+rattle reach react reader ready real realm reason rebel recall
+receipt receive recent recipe recite reckon recognize recommend
+record recover recruit rectangle recycle reduce refer refine
+reflect reform refuge refund refuse regard regime region register
+regret regular regulate rehearse reign reject relate relax
+release relevant reliable relief religion reluctant rely remain
+remark remedy remember remind remote remove renew rental repair
+repeat replace reply report represent reproduce republic
+reputation request require rescue research resemble reserve
+reside resign resist resolve resort resource respect respond
+restore restrict result resume retail retain retire retreat
+return reveal revenue reverse review revise revolt reward rhythm
+ribbon rice riddle ridge rifle right rigid rinse riot ripple
+risky ritual rival river roadway roast robot robust rocket
+romantic roof rookie room roster rotate rough round route
+routine royal rubber rubble ruby rudder rugby ruler rumble
+rumor runner runway rural rush rustic saddle safari safety
+sailor salad salary sale salmon salute sample sanction sanctuary
+sandwich sanitary satellite satisfy sauce sausage savage saving
+scale scandal scarce scatter scene scent schedule scheme scholar
+science scissors scope score scout scramble scrape scratch screen
+script sculpture seal search season second secret section sector
+secure sediment segment seize seldom select self sell senate
+senior sense sentence separate sequence serial series serious
+sermon serve session setting settle several severe shadow shaft
+shallow shame shape share shark sharp shatter shave sheep sheet
+shelf shell shelter shepherd sheriff shield shift shine shiny
+ship shirt shiver shock shoe shoot shop shore short shoulder
+shout shovel show shower shrimp shrink shuffle shutter shuttle
+shy sibling sick side siege sigh sight signal signature significant
+silence silicon silk silly similar simple simulate sincere single
+sink sip siren sister situate size sketch ski skill skin skip
+skirt skull sky slam slang slap slash slave sled sleep sleeve
+slice slide slight slogan slope slot slow slump small smart smash
+smell smile smoke smooth snack snail snake snap snatch sneak snow
+soak soap soar soccer social society socket soda sofa soft software
+soil solar soldier sole solid solution solve somebody somehow
+someone something sometimes somewhat somewhere sonata song soon
+sophisticated sorrow sorry sort soul sound soup source south southern
+souvenir sovereign space spare spark speak species specific specimen
+spectacle spectrum speech speed spell spending sphere spice spider
+spill spin spine spiral spirit splice split spoil sponge sponsor
+spontaneous spoon sport spotlight spouse spray spread spring sprout
+spur square squeeze stability stable stack stadium staff stage
+stagger stagnant stain staircase stake stale stall stamp stance
+stand standard staple star starch stare start state statement
+station statistics statue status statute stay steady steak steal
+steam steel steep steer stem step stereo sterling stick stiff
+still stimulate sting stir stock stomach stone stop storage store
+storm story stove straight strain strand strange strategy stream
+street strength stress stretch strict strike string strip stroke
+strong structure struggle student studio study stuff stumble
+stump stunning stupid sturdy style subject submit subscribe
+subsequent subsidy substance substitute subtle suburb succeed
+success such sudden suffer sufficient sugar suggest suit suitable
+summer summit summon sun superb superior supervise supper supply
+support suppose suppress supreme sure surface surge surgeon surgery
+surname surplus surprise surrender surround survey survive suspect
+suspend sustain swallow swamp sway swear sweat sweater sweep sweet
+swell swift swim swing switch sword symbol sympathy symptom
+syndrome synthesis system tablet tackle tactic tailor talent
+tangle tank tap tape target tariff task taste tattoo taxi tea
+teach team tear tease technical technique technology tedious
+teen telephone telescope television temper temperature temple
+temporary tempt tenant tendency tender tennis tension tent
+term terminal terrain territory terror testify textile texture
+thank theater theft theme theory therapy therefore thermal
+thesis thick thief thigh thin thing think third thirst thorough
+though thought thread threat thrill thrive throat throne through
+throughout throw thrust thumb thunder thus ticket tide tidy
+tiger tight timber timetable timely timing tinkle tiny tissue
+title toast tobacco today toddler together toggle token tolerant
+toll tomato tomorrow tone tongue tonight toolkit topic torch
+torture total touch tough tour tourist tournament toward towel
+tower town toxic trace track tract trade tradition traffic
+tragedy trail train trait transaction transfer transform
+transit translate transmit transparent transport trap trash
+trauma travel treasure treatise treatment treaty tremor trend
+trial triangle tribal tribe tribute trigger trim triple triumph
+trolley troop tropical trouble truce truck true truly trumpet
+trunk trust truth tunnel turkey turmoil turn turtle tutor
+tweet twelve twenty twice twin twist type typical typhoon
+typical ultimate umbrella unable uncle under undergo understand
+undertake unfair unfold uniform union unique unit unite universal
+universe unknown unless unlike unusual update upgrade uphold
+upon upper upset urban urge urgent usage useful usual utility
+utilize utter vacant vacation vaccine vacuum vague valid valley
+valuable value valve van vanish vapor variable variety various
+vary vast vault vector vegetable vehicle veil velocity velvet
+vendor venture venue verbal verdict verify versatile verse version
+vertical very vessel veteran viable vicious victim victory video
+view vigorous village vinegar vintage vinyl violence violin
+virtual virtue virus visible vision visit visual vital vitamin
+vivid vocal voice volcano volume voluntary volunteer vote voucher
+voyage vulnerable wage wagon waist wait wake walk wallet walnut
+wander want warehouse warfare warm warn warrant warrior wash
+waste watch water waterfall wave weak wealth weapon wear weather
+weave website wedding weekend weekly weight welcome welfare
+wealthy weird welcome welfare western whale wheat wheel whereas
+whereby whether while whisper whistle white whole wholesale
+wholesome wicked widely widow width wildlife will willing willow
+wind window wine wing winner winter wisdom wise wish witness
+wolf woman wonder wood wooden wool word work worker world
+worm worry worse worship worth worthy wound wrap wreck wrestle
+wrinkle wrist write writer writing wrong yacht yard yarn yawn
+year yeast yell yellow yesterday yield young youth zeal zebra
+zone zoom
+""".split()
+
+HARD_WORDS = """
+abandoned abbreviation abdominal aberration abhorrent abominable abrasive
+abruptly absentee absorbent absorbing abstention absurd abundance academically
+accelerating accentuate accessible accessorize acclimatize accomplice
+accordion accountable accumulate accurately acquittal adamant adaptation
+additional adept adhesive adjective adjoining adjustment admiration admission
+adolescent adorable advantageous adventurous adversary advertisement
+aerial aesthetic affectionate affirmatively aggravate aggregation agile
+agitation agricultural airworthiness algorithm alignment alimony allegation
+allegorical alleviation allocation allowable almanac aloofness alphabetical
+altercation altogether amalgamate amateur ambidextrous ambiguity ambitious
+ambulatory ameliorate amendment ammunition amnesty amphibious amplitude
+analogous analytical anarchism anatomical ancestors anniversary announcement
+annoying anomalous anonymity antagonist Antarctic antibiotic anticipate
+antiquated antisocial apartment apologetic apparatus apparently appendicitis
+appreciable apprentice approaching appropriate approximately aquarium
+arbitrary archaeological architecturally argument arithmetic armament
+arrangement arrogant articulate artificially artillery ascertain asphyxiation
+assassination assemble assertion assessment assimilate assistance association
+assumption astonishing astronaut asymmetrical atmospheric atomic atrocity
+attempting attendance attentive attorney attraction attributable auctioneer
+audacious authenticity authoritative autobiography autocratic automatic
+automobile auxiliary availability avalanche avant-garde awareness awkward
+bachelorette backstage bacteriology ballpoint bankruptcy barbarian
+barnyard bassoon battlefield beautifully beekeeper beforehand behavioral
+believable beneficial benevolently bequeathed bewildered bibliophile
+bicentennial biographical biotechnology bittersweet blacksmith blameless
+blasphemous blissfully bloodthirsty blossoming bluntness boastfulness
+bodyguard bookkeeping boomerang breathtaking breathless bridesmaid
+brightening brilliantly broadcasting brotherhood budgetary buffoonery
+bulletproof bureaucrat burlesque butterflies calculatingly calisthenics
+calligraphically calorimeter candidacy cannibalistic canonical
+cantankerous capability capitalistic capitulation captivating carefully
+carnivorous cartographer catastrophe categorically caterpillar
+catastrophic ceremonious challenging championship characteristically
+chauffeur cheeseburger chiropractor chocolate chivalrous chlorination
+chromatic chronological churchgoing cinematography civilization
+clarification classification clearheaded cleverness clientele
+climatologist cloistered coagulate coastline coefficient coincidental
+collaboration collector colloquialism colonialism colossal
+combination commemorative commercialism commitment commiserate
+commonality communicate comparable comparative compassion
+compatibility compensatory competence competitive complainant
+complementary complicated complimentary comprehensible
+compromising compulsively computational conceivable concerned
+concertmaster conciliatory concondescending confectionery
+confidentiality configuration confirmation confiscate
+conglomerate congratulatory congressional conical conjunction
+connoisseur conscientious consciousness consecutive consequence
+conservatory considerate consistency consolidated conspiracy
+constellation constitutional construction consultative contaminant
+contemplation contemporary contentious contextual
+continuity contradictory contribution controversial
+conventional conversation conversion convincingly
+cooperative coordinate copyrighting cornflakes
+coronation corporation correlation corroborate
+cosmopolitan counselor counterfeit courageous courteous
+cowardice craftsmanship creativity credibility
+criminality criticism crossroads crucially
+crumple cryptogram crystalline culminating
+cultivation courageousness cupboard curricular
+customarily cyclopedia cylindrical dangerous
+dazzlingly deaconess debilitate decapitation
+deceleration decipherable declaration declassification
+decompose decontaminate decoratively dedication
+deductible deforestation definitively
+deformation dehumidifier deliberation
+delimitation delinquent deliverance delphinium
+demagnetize demobilize democratically demolition
+demonstrable denominational denouncement
+densitometer dental dependable deportation
+deprecating depressive deputation deregulation
+derisively descendant descriptive desensitize
+desertion designation desirability desolation
+desperately destabilize destination destructible
+detectable determinative detonating detriment
+devastatingly developmental deviation devolution
+dexterity diagnostician diagrammatic dialectical
+diametrically diaphragms diarrhoea dictatorially
+differentially difficult digitizing dilapidation
+diligently dimensionality diminishing diplomatic
+direfully disaccharide disagreeable disappearance
+disassembled disbeliever disciplinary discography
+disconnected disconcerting discontinuous
+discountable discrepantly discretionary discriminating
+discussable disembark disengagement disfigurement
+disgraceful disharmony disillusionment disinfectant
+disintegrate disinterested dislocation dismantle
+dismemberment disobedient disparagingly dispensable
+displacement displeasure disposition disproportional
+disputation disregarded disruptive dissatisfying
+dissemination dissenting dissipate dissonant
+distasteful distinctively distinguished
+distortion distraught diversely divestiture
+divisional documentary dogmatically domesticate
+domineering dormitory doubtlessly download
+downplaying dramatization dramatically
+drawbridge drudgingly duplicated dynamics
+dysfunctional earnestly eavesdrop eccentric
+economical ecstatically editable educationally
+effectiveness efficiency egregiously elaborately
+electrifying electrolytic electronically
+eleemosynary elementary elevation eliminative
+eloquence elusive emancipated embarrassing
+embittered emblematic embryological emergency
+emigrating emissary emotional empathize
+emphasizing empirically employable enamored
+encapsulate enchantment encompass encyclopedia
+endangerment endearingly endeavor energizer
+enforceable engagement engineering enjoyable
+enlightening enormously enrich enrollee
+enterprising entertaining enthusiasm entitlement
+entrepreneur envelopment environment
+envisioning epidemiology equalization
+equilibrium equivocal erroneous escalation
+essentially establishment estimation
+estrangement ethnically etymology eucalyptus
+euphemism evaporation everlasting
+exaggerated exhilarating existentially
+expansionist expatriate expectation
+expeditionary experimentally explanation
+exponentially expressionism expressive
+extemporaneous extenuating exterminator
+extinguishable extortionate extraterrestrial
+extravaganza extremely extrinsically
+exuberantly fabricating facetiously
+facilitate Fahrenheit fairground faithfully
+fallacious fascination fatalistically
+faultfinding favorably feasibility
+featureless federally feignedly fellowship
+feverishly fictionalized fidelity
+figurative filament filibuster filtration
+finalization fingerprinting finicky firefighter
+fishmonger fissure flagellation flamboyant
+flatteringly flavored flexitime
+flirtatious flophouse floundering
+fluctuating fluorescent focalization
+folklore foolhardiness footlocker
+foreboding foreclosures forensics
+foreseeable forestation forgetfulness
+formaldehyde formality formulate
+fortification fossilized foundationally
+fractionally fractiousness fragmentation
+frankincense fraternization fraudulent
+freelancing frequentative frightened
+frustratingly fulfillment fundamentalist
+furnishing furthermore gabardine
+gadolinium gallivanting gangrenous
+garrisoned gastronomical genealogical
+generalization generational generically
+genetically genuflecting geodesic
+geographically geologically geometrical
+geophysicist geothermal gingerbread
+gladiatorial glamorization glycerin
+gnomonological goldbricking gossiping
+governmental gradational grammatical
+granddaughter grandiloquent granularity
+graphically gratification gravitationally
+gregariously gridlocked grocery
+grotesquely groundlessly gubernatorial
+guerrilla guidepost gymnastically
+gynecological haberdashery hallucinating
+hampering handcrafted handpicked
+handwriting hardworking harmonization
+harpsichord headquartering heartwarming
+hectoring hedonistic hegemonic
+helicopter helmeted helplessness
+hemispheric hemorrhagic hereditarily
+hermeneutic herpetological herringbone
+hexadecimal hierarchically
+highlighting hirsute historiographer
+holographic homogenized honorarily
+horizontally horrendous horticulture
+hospitable hotheadedness housewarming
+hubristically humanitarian
+humidifying humiliatingly hybridization
+hydraulically hydrocarbon
+hydroelectric hyperactive hypercritical
+hypnotherapy hypocritical
+hypothetically idiosyncrasy
+illegitimacy illiteracy illuminated
+illustrative imaginatively imbalance
+imbecility immaterially immaturity
+immediately immigrated immobile
+immunization immutability impalpable
+impartiality impassively impeccable
+impedimenta impenetrable imperative
+imperialism impermeable impertinent
+impingement implementable
+implicational importation imposingly
+impossibility impoverishment
+impracticable impregnable impressionism
+improbability improvisational
+imprudently inaccessibility inaccurately
+inadvertently inalienable inanimate
+inattentive incapacitate incendiarism
+incessantly incinerating inclination
+incoherence incommunicado incomparable
+incompatible inconceivable incongruent
+inconsequential inconsistently
+inconspicuous incontrovertible
+inconvenience incorporate incorrigible
+incredulously increment indecipherable
+indefatigable indelible independence
+indestructible indeterminable indicatively
+indifference indigenous indoctrination
+industriousness ineffectively
+inelasticity ineptitude inevitably
+inexpensive inextricably infallibility
+infectiously infinitesimal inflammable
+inflexibility influencing informationally
+infrastructure infringement ingenuous
+ingratiating inhabited inheritance
+inhibition initialization injustice
+innocuously innovational inordinately
+inquisition insalubrious insatiable
+inscription insensitivity insidiously
+insincerity insinuating insipidly
+insistently insouciance inspect
+inspirational installation instigating
+institutional instrumentality
+insufficiently insupportable insurmountable
+insurrection intangible intelligentsia
+intemperate intensification
+interactively intercession intercollegiate
+interconnecting interdenominational
+interdisciplinary interestingly
+interference intergalactic interjected
+interlocking interloper intermarriage
+intermediary interminable
+intermolecular internalize interpenetrate
+interpolated interposition
+interrogation interruption
+interspersing interstitial intervention
+interviewing interweaving
+intimidating intolerable intonation
+intoxicating intrauterine intrepidly
+intricacies introspective intrusively
+intuitively invagination invalidation
+inventiveness invertebrate investigative
+invigorating invincible inviolable
+ionospheric iridescent irreconcilable
+irredeemable irregularity irrepressible
+irreproachable irresistibly irresolution
+irrevocable isotropically italicized
+itemization itinerant jeopardize
+journalistically jubilantly judgmental
+jurisdiction justification juxtaposed
+kaleidoscopically kindheartedly
+kinetically knickknack knowledgeably
+laboriously labyrinthine lackadaisical
+ladyfinger lamentation laminating
+landholding languorous largesse latitudinal
+laudability laureateship leatherbound
+legislatively legitimacy leniently
+leprechaunless lexical liberality
+librarianship licentiously lifelessness
+lightweight likely liquescent
+listeners literalism litigating
+liturgical loathsomeness localizing
+locomotion logarithmically logically
+longitudinal loquaciousness lubricating
+lucubration lumberjacking luminescence
+lusciousness luxuriantly lyrical
+machination macrocosm magisterial
+magnanimous magniloquent mailorder
+maintainable maladjusted malediction
+malevolently malfunction maliciously
+malocclusion management mandatory
+manipulative manifestation manipulator
+mantelpiece manufacture marginalization
+marketability marmoreal martial
+mastication materialistic mathematically
+matriculating maximization meaningless
+measurability mechanization medication
+meditative megabucks megalomania
+melancholic melodramatic membrane
+memorabilia mendaciousness menstruation
+mercantile mercilessly meritorious
+mesmerizing metamorphosis metaphorical
+metaphysical meteorology methodical
+meticulousness microcomputer
+microscopic militaristic millennium
+millionaire mimeograph mineralogy
+miniaturization ministration
+misadventure mischievously miserliness
+misgovernment misinformant
+misinterpreted misrepresentative
+missionaries misstatement mistrustful
+mitigating mobilizable moderatorship
+modernization modularity modulatory
+moisturizer molecular momentous
+monarchical monasterial monetarism
+monolingual monopolistic monotone
+monstrousness monumentality
+moralistic morbidness morphologist
+mortifyingly motivational motorcycling
+mountainous mourning mousetrap
+mucilaginous multifunctional multiplex
+multitudinous municipality mummification
+mundaneness municipal muscular
+musicianship mutability mysteriously
+mystifyingly mythologically
+nanotechnology narcotically narratology
+nasalization nationalistic naturalistic
+nauseatingly navigational nebulously
+necessitates necromancer negatively
+negotiability neoclassicism nephritis
+nesciently neurologist neutralization
+newsletters nitrification nocturnal
+noiselessness nominalization
+noncombatant nondescript nonexistent
+nonflammable nonnegotiable
+nonprofit nonresident nonsense
+nontraditional normalizing
+nostalgically noteworthy notification
+notoriously nourishing novelization
+noxiousness nuclear nucleonic
+nullification numeration numerological
+nutritional nymphet obdurately
+objectionable objurgation obligating
+obliteration obliviousness
+obnoxiously obscenely obsolescence
+obstetrician obstructively obtainable
+obtuseness obviating occipital
+occlusion octogenarian oddsmaker
+odorousness offhandedly officiously
+olfactory oligarchical omniscience
+onomatopoeia onslaught operatically
+opinionatedness opportunist
+oppressiveness optical optimistically
+optometrist oratorical orchestration
+ordainment ordinarily organically
+orientating ornamental orthodontic
+orthographical oscillate
+oscillatory ossification osteopathic
+ostentatious outlandishly
+outmaneuver outnumbered outrageous
+outspokenness outstandingly
+overabundant overbearing
+overcompensate overcautious
+overemphasize overestimate
+overexposure overfamiliar
+overindulge overlapping overpass
+overpowering overprotective
+overreaction overregulation
+overshadowed oversimplify
+overstatement overstuffed
+overturning overwhelm
+overwhelmingly overwhelming
+overworking oxygenating pacifically
+painstaking palatial paleontology
+palindromic palliatives palmistry
+panchromatic pancreatically
+pandemonium panoramic pantomimic
+papyraceous paradigmatic paradoxically
+paragraphed paralleling paralyzingly
+paramedical paranoiac parasitically
+parenthetically parliamentarian
+parochialism parsimoniously
+partiality participial particularize
+parturition passiveness pasteurization
+paternally pathologically patriotically
+patronizingly peacekeeping peculiarly
+pedagogical pediatrician pedestrian
+pediment peerlessly pegmatitic
+penetratingly penitentially
+pensionable penuriouslyness
+perambulating perceptibly
+percolating percussive peregrination
+peremptorily perennially perfectible
+perfidiousness perfunctorily
+peripherally periphrastic periscope
+peristaltic peritonitis periwinkle
+permanently permeableness
+permissibility permissiveness
+perniciously perpendicular
+perpetrating perpetuality
+perpetuating perquisites persecuting
+perseverance personification
+perspicacious persuasiveness
+pertaining pertinacious perturbing
+pervasiveness perversion pessimism
+pestiferous petitioning petrification
+petrologist petulantly phantasmal
+pharmaceutic philanthropically
+philological philosophically
+phonographic phosphorescent
+photoelectric photographically
+photomural phraseology phylogeny
+physiognomy physiographical
+pictorially piecemeal pigmentation
+pilgrimages pilloried pinkishness
+piratically placating plaintiff
+planlessness plantigrade plasmatic
+plasticity platitudinous platonically
+plausibility playfulness pleasantries
+pleasurable plebiscite plenipotentiary
+plentifulness pneumatically
+poignantly pointedly pointlessly
+poisonously polarization polemical
+policymaking politically politician
+pollination polyandrous polyglot
+polymorphic polyphonic polysyllabic
+ponderously popularization populated
+porcelain pornographically
+portentously portfolio portioning
+portraying positionally positively
+possessively posthumously
+postmaster postoperatively
+postscript postulation potentially
+powerlessly practicability
+pragmatically prankishness
+preachership precariousness
+precedential precipitately
+precipitous precisely preclude
+precociously precognitive
+preconception precondition predaceous
+predestination predetermined
+predicament predicative predictably
+predisposition predominately
+preeminently preemptively
+prefabricated preferentially
+prehistorical prejudgment prejudiced
+preliminarily preliterate
+prematurely premeditated
+premonitory preoccupied preoperatively
+preparation preponderance
+prepossessing preposterously
+preregistration presbyopic
+prescribed prescriptive preselecting
+presentiment presidential
+preservable pressingly
+pressurization prestidigitation
+presumably presupposition
+pretentiously preternatural
+prevailingness preventively
+previousness pricelessness
+priestcraft primarily primogeniture
+principally principled prisoner
+pristinely privatization privileged
+prizefighting probabilistic probatively
+problematic procedurally procession
+proclamation procrastinate
+procurable prodigiousness
+productively profession professorship
+profiteering profitable prognosticate
+programmable progressively prohibitive
+projectionist proletarian proliferating
+prolifically prolongation promiscuous
+promontory prompter pronounceable
+propagandist propellant propensity
+prophetically propitiatory propitiously
+proportionate proprietary proprieties
+prorogation proselytizing prospective
+prosperously prostaglandin
+prostrate protagonist protectively
+protestation protocol protohistoric
+protrusively providentially
+provincialism provisionally
+provocatively proximately prudent
+prudentially pruriently
+pseudonymous psychedelic
+psychiatrically psychological
+psychometric psychotically
+pubescence publicized puerilely
+pugnaciousness pulverizing
+punctilious punctuate punishment
+puppeteering purposively purportedly
+pursuance pusillanimous pyramiding
+quadruplicate quaintness qualified
+quantitative quarantined quarrelsome
+quartermaster queasiness querulousness
+questionable quickening quiescent
+quinquennial quintessence quixotically
+quizzicality quotational
+racecourses radiological ragamuffin
+railroading rambunctious randomized
+rapaciousness ratiocination rationalize
+reactionary readjusting reaffirmation
+realignment realistically reappearing
+rearranging reasonable reassembly
+rebelliously recalcitrance
+reciprocating recitational
+reclamation reclusiveness
+recognizable recommendable
+recompensing reconcilable
+reconnoiter reconsider
+reconstruct recuperating
+recurringly redeemable
+redistribute reeducating refashioning
+referential refinancing
+reflectance reformation refracting
+refrigerant refurbishment
+regenerated regeneratively
+regimented regionalism
+regrettably reharmonizing
+reincarnation reinforcing
+reinstatement reiteration
+rejoicingly rejuvenated
+relativistic relevance
+reliabilities religiously
+relinquished relishable
+remanufacture remarkable
+reminiscence remittances
+remonetization remunerative
+renormalize renovating
+reordering reparation
+repatriating repealable
+repercussion repetitiously
+replacement repleteness
+reposed reportorial
+repositioned reprehensively
+represented repressively
+reprimanding reproducing
+republican repudiating
+repugnantly reputation
+requirement requisitioning
+reradiated rescheduled
+rescinding resemblance
+resettlement resiliently
+resoluteness resonance
+respectable respirable
+respectively restatement
+restaurants restitution
+restoratively restricted
+restructure resurrected
+retaliation retentiveness
+reticently retinopathy
+retirement retracted
+retransmit retroactive
+retrogressing reunification
+revelational reverberating
+reverential revindication
+rhetorician rheumatism
+rhythmically ridiculously
+righteously rigorously
+riverbeds roadway romanticized
+rostrums rotating rotogravure
+roughshod roundabout routinely
+rudimentary ruggedness rustically
+sabbaticals sacramentally
+sacrilegious saddlebags safety
+sagittarius salamander salesclerk
+saliently salmonella saltwater
+sanctimonious sandbagging
+sanguinary sanitizing sapphire
+sarcophagus sardonic satiating
+satirically satisfyingly
+saturation savageness scabbard
+scaffolding scaliness scandalized
+scapegoating scarceness
+scatological schematically
+schismatics scholastically
+scientologist scintillating
+scintiscan scleroderma
+scoreboards scotomization
+scrappiness scripturally
+scrumptiously scrutinizing
+sculpturing seamanship seasonable
+seaworthiness secretarial
+sectionally seditiousness
+seductively segmentedly
+seismograph selectivity
+selfishly semantically
+semantically semiautomatic
+semiconscious semiofficial
+sempiternal senatorially
+sensational senselessness
+sensitively sentimentalizing
+separateness septuagenarian
+sequentially serendipitously
+serializing serpentine serviceman
+sesquicentennial severally
+shakespearian sharecrop
+sharpshooter sheepherder
+shellacking sherlocking
+shipwrecking shockingly
+shortchanging showmanship
+shrewishness shrillness
+sickeningly sidelining signally
+signature significantly
+silversmith simplistically
+simultaneously singleness
+singularly sinisterly
+situationally skedaddling
+skillfulness skittishness
+skyrocketing slaughterhouse
+slaughterous slothfully
+sluggishly smattering
+smokestack snowcapped
+sociability socialistically
+socioeconomic softheartedness
+soldiering solemnization
+soliloquize somnambulist
+sophistical sororities
+soubriquet soundlessly
+southeasterly sovereignly
+spaciousness spaghetti
+spasmodically specialization
+specification speckledness
+spectacularly spectroscope
+speculatively speedometer
+spellbinding spendthrift
+spherically spinelessness
+spiritually splashboard
+splenetically splintery
+spontaneously sportswriter
+spotlessness springboard
+sprightliness spruceness
+squanderer squareness
+squeamishness stabbing
+stabilizing stagecoach
+stagnation stalactite
+stalemating stalinism
+standardize standoffish
+staphylococcus stargazing
+statuesque steadfastly
+steamrolling steelmaking
+stegosaurus stereotyped
+sterilization stigmatize
+stimulatingly stipendiary
+stockholder stockpiling
+stodginess stoically
+stonewalling stoppering
+storekeeper storminess
+stoutheartedness stowaway
+straightjacket straightforward
+stratification stratocumulus
+streptococcus stretchable
+stringently striptease
+structuralism stuffiness
+stultifyingly sturdiness
+stylistically suasion subcommittee
+subcontractor subcutaneously
+subdirectory subduction
+subheadings subjugating
+subjunctive sublethal
+submersible submergence
+submission subnormality
+suborbital subparagraph
+subpoenaed subscribing
+subsequent subsidence
+subsidiary subsidizing
+substantiate substituting
+substratum subtleness
+subterfuge subtracting
+suburbanite subvention
+subversively succeeding
+successfully succinctly
+sufficiency suffocatingly
+suggestible sugaring
+suitability sulfanilamide
+summarization summoning
+sunbathers superabundant
+supercilious superficiality
+superfluity superheat
+superimpose superintend
+superlative supermarket
+supernatant supernumerary
+superposed superscribe
+superstar superstitious
+supervention supervising
+supinely supplanting
+supplemental suppliantly
+supportable supposition
+suppressive supranational
+supremacist surcharge
+surprisingly surrenderer
+surrogation surroundingly
+surveillance survivability
+susceptible suspender
+suspiciously sustentation
+swallowtail swarthiness
+swashbuckler swelteringly
+swingletree syllabicate
+syllogistic symbiotically
+symbolizing symmetrically
+symptomatic synchronize
+syncopated syndication
+synergistic synonymously
+synthesizer synthetically
+systematically tabernacle
+tachycardia tactlessness
+taleteller talkatively
+tangibility tantalizingly
+tarantellas tastiness
+tattletale taxonomist
+technicality technocracy
+telecommunication telekinetic
+telepathically telescoping
+temperamentally tempestuous
+temporarily temporize
+temptingly tenableness
+tendentiously tenderloin
+tenement tenorless
+tensionless tentativeness
+terminating terminologically
+terpsichorean territorially
+terroristically testamentary
+textbookish theatricality
+theologians theoretically
+theosophical therapeutically
+thermoelectric thermonuclear
+thoroughbred thoughtfulness
+threatening thromboembolism
+thunderstorm thunderstruck
+thwarting tidiness
+timelessness timeserving
+tintinnabulary tiresomeness
+titillatingly toadstools
+togetherness tolerantly
+tonsillectomy toothbrush
+topographer topsyturvy
+tormentingly torpedoing
+totalitarian touchiness
+touchstone tourmaline
+toxoplasmosis traceably
+tracheotomy trademarking
+traditional tragedienne
+tragicomic trailing
+tranquilizing transcendant
+transcribe transducer
+transferable transferee
+transfigure transfixed
+transfusable transgressing
+transience transitionally
+transitory transliterate
+transmissible transmogrify
+transmutable transoceanic
+transparent transpiring
+transplant trapezoid
+trashiness traumatizing
+travelogue treacherously
+tremendously tremulousness
+trespassing triangular
+tributaries trichinosis
+trickiness tricolor
+trifurcated triggerfish
+trigonometry trilingual
+trinitarian trinomial
+tripartite triphthong
+triplication trisecting
+triteness triumphantly
+triviality trochanter
+tropopause troublesome
+truculently trustingly
+trustworthiness tryptophan
+tuberculin tumbledown
+tunefully turbulently
+turgidity turnabout
+turpentine turtleback
+tutelary twelvemonth
+twentieth typification
+typographer tyrannically
+ubiquitousness ulcerating
+ultramarine ultrasonics
+umbilicus unaccented
+unadulterated unadvisedly
+unaffectedly unalienable
+unalterable unanimity
+unashamedly unassuming
+unattenuated unauthorized
+unavailingly unbecomingly
+unbeknownst unbelieving
+unboundedness unbridgeable
+uncanonical uncatalogued
+unceasingly uncertainly
+unchallengeable uncharitable
+uncircumcised uncivilized
+uncleanliness unclouded
+uncomfortably uncommonness
+uncompromisingly unconcern
+unconditional unconditioned
+unconscionable unconsciousness
+unconstitutional uncontrollably
+unconventionality unconverted
+unconvincing uncorroborated
+uncourageous uncoverable
+uncreativeness undemonstrative
+underachievement underbrush
+undercarriage underclass
+underclothing undercoating
+undercurrent underdeveloped
+underemployed underestimate
+underexposed underfoot
+undergarment undergrad
+underhanded underlay
+underlinings underlyingly
+undermining underpainting
+underpinning underprivileged
+undersecretary underside
+understandable understate
+understructure understudied
+undersurface undertake
+underutilized undervalued
+underwater underweight
+underworld underwritten
+undesirability undetectable
+undetermined undifferentiated
+undigested undiplomatic
+undisciplined undistorted
+undisturbed undivided
+undoubted undramatic
+undutifulness unearthing
+unemotional unemployable
+unendurable unenforceable
+unenlightened unenthusiastic
+unequalled unequivocally
+unethical unevenness
+unexceptionable unexcited
+unexpectedness unexpired
+unexplainable unexposed
+unfailing unfairness
+unfaithfully unfaltering
+unfashionable unfathomable
+unfavorable unfederated
+unfeelingly unfeignedly
+unfettering unfilial
+unflaggingly unflattering
+unflinching unfoldment
+unforeseeable unforgivable
+unforgotten unformulated
+unfortunate unfounded
+unframed unfrequented
+unfriendliness unfruitful
+ungallantly ungenerous
+ungentlemanly ungloved
+ungracefully ungrateful
+ungrounded unguarded
+unguentary unhallowed
+unhampered unhandy
+unhappily unhealthiness
+unheeding unhelpful
+unheralded unhindered
+unholiness unhopeful
+unhorse unhouse
+unicameral unicellular
+unification uniformed
+unify unilateral
+unimaginably unimpaired
+unimportant unimpressed
+unindebted uninfluenced
+uninhabited uninhibited
+uninitiated uninjured
+uninspired unintelligent
+uninterested uninteresting
+uninterrupted uninvited
+unionization unipolar
+uniqueness unitarily
+unitedly univalent
+universalize unjoyfulness
+unjustifiable unkemptly
+unknowable unladylike
+unlawfulness unleavened
+unless unlettered
+unlike unlikelihood
+unlimited unlined
+unliquidated unlisted
+unliterary unlivable
+unloads unlooked
+unlovely unluckily
+unmade unmake
+unmanageable unmanifested
+unmanly unmanned
+unmannerly unmarked
+unmarried unmask
+unmatched unmated
+unmeant unmeasurable
+unmeet unmelodious
+unmentionables unmerciful
+unmerited unmilitary
+unmindful unmingled
+unmistakable unmitigated
+unmixed unmodulated
+unmolested unmoor
+unmoral unmordantly
+unmotivated unmoved
+unmusical unnameable
+unnatural unneeded
+unnegotiable unneighborly
+unnerves unobserved
+unobstructed unoccupied
+unofficially unopened
+unopposed unordained
+unorganized unoriginal
+unorthodox unpack
+unpainted unpalatable
+unparalleled unpardonable
+unpatriotic unpeeled
+unperceived unperceptive
+unperformed unperson
+unpersuaded unperturbed
+unphilosophic unpick
+unpinned unplanned
+unpleasant unpleasing
+unplumbed unpolished
+unpolluted unpopular
+unpractical unprecedented
+unpredictability unpretentious
+unprincipled unprintable
+unprocessed unproductive
+unprofessional unprofitable
+unpromising unprompted
+unpronounceable unpropitious
+unprotected unproved
+unprovoked unpublished
+unpunctual unpunished
+unqualified unquenchable
+unquestionable unquiet
+unquotable unrated
+unravel unread
+unrealistic unrealized
+unreasonable unreasoning
+unreceptive unrecognized
+unreconciled unrecoverable
+unredeemed unreel
+unrefined unregenerate
+unregistered unregulated
+unrehearsed unrelated
+unrelenting unreliable
+unremarkable unremitting
+unrepentant unreported
+unrepresentative unrequited
+unreserved unresolved
+unresponsive unrestrained
+unrestricted unrevised
+unrewarded unriddle
+unrighteousness unripe
+unrivaled unroll
+unromantic unruffled
+unruly unsaddle
+unsafe unsaid
+unsalted unsatisfying
+unsavory unscathed
+unscheduled unschooled
+unscientific unscramble
+unscrew unscripted
+unscrupulous unseal
+unseasonable unseat
+unseemly unseen
+unsegmented unselfish
+unsent unsettle
+unsettling unsex
+unshackle unshaken
+unshaped unshapen
+unshod unshodden
+unsightly unskilled
+unslaked unslung
+unsmiling unsnarl
+unsociable unsoiled
+unsold unsolicited
+unsolvable unsophisticated
+unsorted unsought
+unsoundness unsparing
+unspeakable unspecific
+unspectacular unspent
+unspoiled unspoken
+unspotted unstable
+unstatesmanlike unsteadiness
+unstinted unstop
+unstrained unstressed
+unstring unstudied
+unsubstantial unsuccessful
+unsuitable unsuited
+unsullied unsung
+unsupervised unsupportable
+unsuppressed unsure
+unsurpassable unsuspected
+unsuspecting unsustainable
+unsweetened unswerving
+unsymmetrical unsympathetic
+untactful untamed
+untangling untarnished
+untasted unteachable
+untenanted unthinking
+untidiness untimely
+untiring untitled
+untold untouchable
+untoward untraced
+untrained untrammeled
+untraveled untreated
+untried untrimmed
+untrodden untrue
+untrustworthy untruth
+untuck unturned
+untutored untwist
+untypical unusable
+unusual unutterable
+unvaccinated unvalued
+unvaried unvarnished
+unvarying unveil
+unvendible unverified
+unversed unviable
+unvisited unvocal
+unwanted unwarily
+unwariness unwarmed
+unwarned unwarrantable
+unwary unwatchful
+unwavering unweaned
+unwearied unweave
+unwed unwedded
+unwelcome unwell
+unwholesome unwieldy
+unwilling unwind
+unwinking unwisdom
+unwished unwitnessed
+unwitting unwomanly
+unwonted unwooded
+unworkable unworldliness
+unworn unworried
+unworthily unwounded
+unwrapped unwritten
+unyielding unyoke
+unzip upbraid
+upbraiding upcast
+upcoming updraft
+upended upgrade
+upheaval uphill
+uphold upholster
+upholstery uplift
+uplifting upmost
+upon upraise
+uprear upright
+uprisings uproar
+uproot upscale
+upset upshot
+upside upstage
+upstairs upstart
+upstate upstream
+upsurge upswing
+uptake uptight
+uptown upturn
+upward upwind
+""".split()
+
+# ---------------------------------------------------------------------------
+# Sentences
+# ---------------------------------------------------------------------------
+EASY_SENTENCES = [
+    "the cat sat on the warm mat.",
+    "i like to read a good book.",
+    "we can go to the park today.",
+    "she has a red bike and a bell.",
+    "he is my best friend at school.",
+    "the sun is hot and the sky is blue.",
+    "i want to learn how to type well.",
+    "my dog likes to run in the yard.",
+    "do you want to play a game with me?",
+    "the baby is sleeping in the next room.",
+    "we had eggs and toast for breakfast.",
+    "it is a very cold day in the city.",
+    "can you help me find my lost keys?",
+    "the train arrives at ten past nine.",
+    "she drew a big house with a tree.",
+    "i will call you when i get home.",
+    "the little boy ran to his mother.",
+    "they are going to the beach tomorrow.",
+    "please close the door on your way out.",
+    "my favorite color is a deep green.",
+    "the fish swim fast in the clear water.",
+    "he put the milk back in the fridge.",
+    "we saw three birds on the old wall.",
+    "the cake needs one more hour to bake.",
+    "i am reading a story about a dragon.",
+    "she sang a soft song to the baby.",
+    "the car is parked behind the house.",
+    "let us take a walk after dinner.",
+    "the kids built a fort from boxes.",
+    "i found a coin on the side walk.",
+    "the wind blew the leaves off the tree.",
+    "he wrote his name at the top.",
+    "we will meet at the bus stop.",
+    "the soup is too hot to eat now.",
+    "she keeps her pens in a blue jar.",
+    "the moon looks big and bright tonight.",
+    "i need a new pair of shoes.",
+    "the class starts at nine in the morning.",
+    "he cut the paper with small scissors.",
+    "the store closes at eight on friday.",
+    "my sister plays the piano very well.",
+    "the bird made a nest in our tree.",
+    "i like apples more than pears.",
+    "the road is long and very straight.",
+    "she gave me a card for my birthday.",
+    "we heard a strange noise outside.",
+    "the old man walked slowly to the bench.",
+    "it is time to feed the cat.",
+    "the lamp gives off a soft light.",
+    "he asked me for a pencil and paper.",
+    "the girls skipped rope at recess.",
+    "the plane flew high above the clouds.",
+]
+
+MEDIUM_SENTENCES = [
+    "Practice a little every day and your fingers will learn the keys on their own.",
+    "The quickest way to improve is to slow down and aim for clean, accurate typing.",
+    "A steady rhythm matters far more than short bursts of frantic speed.",
+    "When you make a mistake, keep going; there will be time to fix it later.",
+    "Good posture keeps your hands relaxed and your shoulders free of tension.",
+    "The library on the corner stays open until nine o'clock every weeknight.",
+    "She packed her bag, locked the door, and walked quickly to the station.",
+    "Learning to type without looking takes patience, but it pays off quickly.",
+    "He checked the map twice before turning onto the quiet coastal road.",
+    "The old bridge over the river was built more than a hundred years ago.",
+    "If you practice the same paragraph five times, it starts to feel easy.",
+    "Most people type faster when they stop watching the keyboard entirely.",
+    "The meeting was moved to thursday because the main room was unavailable.",
+    "A good keyboard should feel comfortable even after an hour of writing.",
+    "The children collected shells along the shore while the tide went out.",
+    "Consistency beats intensity: fifteen minutes daily beats two hours weekly.",
+    "She wrote a short note, sealed the envelope, and left it on the table.",
+    "Typing is a motor skill, so let your muscles do the remembering for you.",
+    "The train was late, so we grabbed coffee and waited on the platform.",
+    "Reading aloud can help you notice where sentences naturally want to pause.",
+    "He kept a small notebook in his pocket for ideas that arrived unannounced.",
+    "The garden looked completely different after the spring rain had fallen.",
+    "Accuracy first, speed second; the speed will arrive on its own schedule.",
+    "Every finger has a home key, and every key has an assigned finger.",
+    "The recipe calls for two cups of flour and a pinch of fine salt.",
+    "She turned the key slowly and pushed the heavy wooden door open.",
+    "A quiet room, a comfortable chair, and a clear goal make practice easier.",
+    "The mountain trail was steep, but the view from the top was worth it.",
+    "Do not rush the difficult words; slow practice builds permanent accuracy.",
+    "He learned the alphabet song long before he learned to write the letters.",
+    "The city looks its best in the early morning before the traffic starts.",
+    "Write first, edit later; the two jobs use completely different muscles.",
+    "The classroom was warm, the lights were low, and the students were quiet.",
+    "Her grandmother taught her to sew buttons on a rainy afternoon.",
+    "The bicycle chain squeaked until he finally remembered to oil it.",
+    "Small daily improvements are invisible until one day they are obvious.",
+    "He circled the block twice before finding a space near the entrance.",
+    "The soup needed more salt, a little pepper, and a lot of patience.",
+    "Every expert was once a beginner who refused to stop showing up.",
+    "The river bends east here and runs wide and slow through the valley.",
+    "She labeled every box so that moving day would not turn into chaos.",
+    "The dog waited by the door long before anyone reached for the leash.",
+    "Listen to the sound of your keyboard; a smooth rhythm sounds different.",
+    "He practiced the hard sentences until the mistakes simply stopped coming.",
+    "The bakery on main street opens before the sun comes up each morning.",
+    "Keep your wrists level and let your fingers do the small quick work.",
+    "The letter arrived three weeks late, but the news inside was still good.",
+    "Progress is rarely a straight line, so measure it over weeks, not hours.",
+    "She set a timer for twenty minutes and typed without stopping once.",
+    "The best typists rarely look down; their eyes stay on the screen.",
+]
+
+HARD_SENTENCES = [
+    "The exhibition, which opened on a rainy thursday in october, featured forty-two artists from eleven different countries.",
+    "\"Accuracy is a habit,\" the instructor repeated, \"and habits are built one deliberate repetition at a time.\"",
+    "Although the proposal looked straightforward, it required (1) funding, (2) staffing, and (3) a great deal of patience.",
+    "By the time the sun set behind the hills, the hikers had covered nearly eighteen kilometers of rough, rocky trail.",
+    "The report concluded that the system, while innovative, would cost approximately $2.4 million to implement fully.",
+    "She had learned three languages as a child; consequently, switching between vocabularies felt almost effortless to her.",
+    "The engineer explained that the bridge could withstand winds of up to 120 km/h, which exceeded every local requirement.",
+    "After weeks of negotiation, the committee finally agreed on a schedule that satisfied both the staff and the students.",
+    "The novel's protagonist, a reluctant historian, discovers a map hidden inside a seventeenth-century manuscript.",
+    "While some people prefer mechanical keyboards, others argue that a quiet, low-profile design reduces finger strain.",
+    "The recipe - passed down through four generations - calls for exactly seven ingredients and no shortcuts whatsoever.",
+    "Data from the last quarter suggests that engagement rose 23% after the interface was simplified and redesigned.",
+    "He argued, somewhat convincingly, that the greatest inventions usually solve problems nobody thought to describe.",
+    "The orchestra fell silent; then, with a single nod from the conductor, the first violin began the slow, careful introduction.",
+    "Because the train was delayed, they missed the connection and spent an unexpected night in a small coastal town.",
+    "The manuscript was written in 1847, lost for nearly a century, and rediscovered in 1953 beneath a library floorboard.",
+    "Even experienced typists occasionally stumble on sequences like 'edited', 'resisted', and 'determined'.",
+    "The workshop covered three topics: posture, finger placement, and the psychology of sustained, focused practice.",
+    "Her argument - that speed follows accuracy, never the reverse - was supported by every study she cited.",
+    "The old photograph, slightly faded at the edges, showed a street that no longer existed in any recognizable form.",
+    "Consider the following: 47% of participants improved by more than 15 WPM after only two weeks of daily practice.",
+    "The committee's recommendation, though unpopular with the board, was eventually adopted without significant modification.",
+    "Nobody expected the quiet student in the third row to deliver the most compelling presentation of the semester.",
+    "The machine, built in 1962, still functioned perfectly thanks to a maintenance log spanning sixty-one handwritten volumes.",
+    "If you can type this sentence without looking down, you have already mastered the hardest part of the craft.",
+    "The letter ended with a postscript: \"P.S. Please send my regards to your family; it has been far too long.\"",
+    "Between 1985 and 1995, the region's population grew by nearly 40%, transforming farmland into busy suburbs.",
+    "The lawyer's closing statement was brief, precise, and - according to the jury - almost impossible to argue against.",
+    "His theory, controversial at first, gained credibility once independent researchers replicated the original findings.",
+    "She kept three dictionaries on her desk: one for definitions, one for synonyms, and one for etymology.",
+    "The instructions were clear enough: press the red lever, wait for the tone, and then release the secondary latch.",
+    "Although the storm passed quickly, it left several trees down and roughly 3,000 homes without electricity overnight.",
+    "The professor insisted that writing well is simply thinking clearly, made visible on a page, one sentence at a time.",
+    "A single typing error in a financial report can change $1,000 into $10,000; attention to detail is not optional.",
+    "The expedition documented 118 species, several of which had never been observed outside the protected reserve.",
+]
+
+# ---------------------------------------------------------------------------
+# Paragraphs (~70-110 words for medium, ~130-180 for hard)
+# ---------------------------------------------------------------------------
+MEDIUM_PARAGRAPHS = [
+    "Typing well is a quiet skill. Nobody watches your hands while you work, yet the difference between a hunt-and-peck typist and a fluent one shows up in every sentence you write. The good news is that the skill is cheap to build: it costs only a few focused minutes each day. Start slowly, keep your eyes on the screen, and let accuracy lead. Speed is the reward that arrives on its own, usually when you stop chasing it.",
+
+    "Every key on the keyboard belongs to a finger. The home row is where your hands rest between bursts of typing, and the small bumps on the F and J keys tell your index fingers where home is without looking. When you learn to return to that resting position automatically, your hands develop a map of the keyboard. From there, typing becomes less about remembering and more about feeling.",
+
+    "A steady rhythm protects you from fatigue. Typists who burst quickly and then pause tend to make more mistakes than typists who move at an even, unhurried pace. If you find yourself speeding up and slowing down, take a breath and settle back into a comfortable tempo. Your hands will last longer, and your accuracy will improve without any extra effort on your part.",
+
+    "Mistakes are information. When the same key defeats you again and again, that is not a failure; it is a pointer to the exact movement that needs practice. Good training software tracks those weak keys and quietly folds them back into your lessons. Over time, the keys that once felt awkward become the ones you trust the most, and the difference disappears.",
+
+    "Posture matters more than people expect. Sit far enough back that your elbows rest at roughly a right angle, keep your wrists level rather than bent upward, and let your chair carry your weight. A cramped position tires the small muscles of the hand quickly, and tired hands make sloppy keys. Ten minutes of comfortable typing beats an hour of straining.",
+
+    "Progress in typing is rarely dramatic. You will not wake up one morning twice as fast as the night before. Instead, the words-per-minute number creeps upward over weeks, and the errors quietly thin out. Measure yourself over months rather than hours, celebrate the small improvements, and trust that consistent practice compounds in a way that intense bursts never do.",
+
+    "Reading ahead is one of the habits that separates good typists from great ones. Instead of watching each letter arrive, train your eyes to run a few words in front of your fingers. Your hands will follow the path your eyes have already walked. It feels strange at first, almost like reading and typing at the same time, but it is the secret behind smooth, confident output.",
+
+    "The keyboard has not changed much in more than a century. The arrangement of letters, numbers, and punctuation marks is a compromise designed to spread work across all ten fingers. It was not built for speed; it was built to prevent the mechanical arms of early typewriters from jamming. That history is why some common letters sit in awkward places, and why practice still matters.",
+
+    "When you practice, choose quality over quantity. Fifteen attentive minutes with full concentration will teach your hands more than an hour of distracted, half-hearted typing. Turn off the notifications, pick one short passage, and repeat it until it feels smooth. Then move on. Repetition is the teacher, but only when your attention is actually present.",
+
+    "Numbers and punctuation are where many typists lose their rhythm. The top row sits farther from the home position, and reaching for it breaks the flow of a sentence. The solution is simple exposure: practice rows of digits, dates, and short calculations until the reach feels natural. A few minutes a week is enough to keep those keys from feeling foreign.",
+]
+
+HARD_PARAGRAPHS = [
+    "The history of the typewriter is, in many ways, the history of a compromise. Early machines jammed whenever adjacent letters were struck in quick succession, so the keyboard was deliberately rearranged to slow typists down and separate common letter pairs. The layout that resulted, still in use today, spread the workload across both hands and made the mechanical arms less likely to collide. What began as a workaround for nineteenth-century engineering limitations became the most widely used input device on the planet, outliving the machines that inspired it by more than a century.",
+
+    "Researchers who study motor learning describe a predictable pattern. In the first stage, every movement requires conscious attention, and progress feels painfully slow. In the second stage, the movements begin to link together into small automatic chunks; the learner notices fewer individual decisions. In the final stage, the skill runs largely outside awareness, freeing the mind to think about the content rather than the mechanics. Typing practice is a textbook example of this progression, which is why patience during the early, awkward phase is not merely a virtue but a strategy.",
+
+    "Consider the difference between accuracy and speed as training targets. If you optimize purely for speed, errors accumulate and your hands learn sloppy habits that are difficult to unlearn later. If you optimize purely for accuracy, your pace can become stiff and hesitant. The most effective approach alternates between the two: practice slowly with perfect form until the passage is clean, then push the tempo slightly and see whether the accuracy survives. When it does not, back off. That boundary, where speed and correctness just barely coexist, is where the most durable learning happens.",
+
+    "The economics of attention deserve serious consideration in any practice routine. A short session performed without distraction can produce more improvement than a long session divided among messages, notifications, and background noise. Cognitive scientists describe attention as a limited resource that must be spent deliberately, and motor skills are especially sensitive to divided focus. The practical advice is unglamorous but reliable: choose a fixed time, remove interruptions, work on one specific weakness, and stop while you still feel fresh.",
+
+    "Statistical analyses of typing performance reveal several counterintuitive findings. First, the correlation between raw speed and error rate is weaker than most people assume; a fast typist with clean technique often outperforms a faster one who constantly backtracks. Second, improvement tends to arrive in plateaus rather than steady curves, with long flat stretches punctuated by sudden jumps. Third, the benefits of practice decay slowly, meaning that skills built over months remain largely intact even after extended breaks. Together, these findings argue for calm, sustained, deliberate training.",
+
+    "The physical design of a keyboard influences performance more than its marketing suggests. Key travel, actuation force, and the distance between rows all change how quickly fingers can return home. A keyboard that is too stiff tires the small muscles of the hand; one that is too soft invites accidental presses. Experienced typists often develop strong preferences, but beginners benefit most from a moderate, consistent board that allows them to build a reliable mental map without fighting the hardware.",
+
+    "Error correction is itself a skill worth practicing. Some typists stop, backtrack, and repair each mistake immediately, which preserves a clean page but destroys rhythm. Others continue and rely on a later editing pass, which preserves flow but compounds the problem. A balanced strategy is to correct mistakes in place only when they are immediately disruptive, and otherwise mark the spot and return after finishing the passage. Learning which mistakes deserve immediate attention is part of becoming fluent.",
+
+    "Motivation, unfortunately, is a poor foundation for a training habit. It arrives unpredictably and departs without notice. Systems, by contrast, are dependable: a scheduled time, a defined lesson, a visible record of progress. When motivation is high, systems keep the practice from becoming reckless. When motivation is low, systems keep it from disappearing entirely. The most successful learners are rarely the most inspired; they are simply the ones who arranged their environment so that practice was the path of least resistance.",
+
+    "Measurement changes behavior in subtle but powerful ways. A typist who records daily speed and accuracy begins to notice patterns that were previously invisible: which days start slowly, which passages cause trouble, how long warm-up takes. This data transforms vague intentions into specific, addressable weaknesses. The numbers should inform the practice, not define it; a slightly unflattering measurement is far more useful than a comforting guess, provided it is honest about what it can and cannot measure.",
+
+    "Fluency, when it finally arrives, feels less like expertise and more like the removal of an obstacle. The keys stop being objects you search for and become extensions of intention; the sentence you compose in your head appears on the screen almost as quickly as you think it. At that point, typing has ceased to be the task and has become the medium through which the actual work happens. Every hour spent on drills was, in effect, an investment in that transparent, effortless moment.",
+]
+
+LESSONS = {
+    "rows": ROWS,
+    "words": {"easy": EASY_WORDS, "medium": MEDIUM_WORDS, "hard": HARD_WORDS},
+    "sentences": {"easy": EASY_SENTENCES, "medium": MEDIUM_SENTENCES, "hard": HARD_SENTENCES},
+    "paragraphs": {"medium": MEDIUM_PARAGRAPHS, "hard": HARD_PARAGRAPHS},
+}
+
+
+def main() -> None:
+    # Sanity checks: no empty pools, no duplicate sentences.
+    for kind, pools in (("words", LESSONS["words"]), ("sentences", LESSONS["sentences"]),
+                        ("paragraphs", LESSONS["paragraphs"])):
+        for name, items in pools.items():
+            assert items, f"{kind}/{name} is empty"
+            assert all(isinstance(i, str) and i.strip() for i in items), f"{kind}/{name} has bad items"
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    OUT.write_text(json.dumps(LESSONS, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    counts = {f"{k}/{n}": len(v) for k in ("words", "sentences", "paragraphs")
+              for n, v in LESSONS[k].items()}
+    print(f"wrote {OUT}")
+    for key, count in counts.items():
+        print(f"  {key:<20} {count} items")
+
+
+if __name__ == "__main__":
+    main()

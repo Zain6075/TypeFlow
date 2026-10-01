@@ -1,0 +1,9 @@
+# TypeFlow runtime dependencies (Python 3.9+)
+#
+# Everything else the app uses ships with Python or PyQt6:
+#   * sqlite3/json/tempfile ... standard library
+#   * sound effects are synthesised at runtime (wave module)
+PyQt6>=6.4
+
+# Only needed to build the Windows .exe (see build_exe.bat):
+# pyinstaller>=6.0
